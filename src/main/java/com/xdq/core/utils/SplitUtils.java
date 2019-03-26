@@ -44,4 +44,13 @@ public class SplitUtils {
                 ).drop("splitcol");
         return resultFrame;
     }
+
+    public static DataFrame SplitFiveMinSnapTest(String path, SQLContext sqlContext) {
+        DataFrame resultFrame = sqlContext.read().text(path).withColumn("splitcol", split(col("value"), ","))
+                .select( col("splitcol").getItem(0).as("time"),
+                        col("splitcol").getItem(1).as("msisdn"),
+                        col("splitcol").getItem(2).as("cgi")
+                ).drop("splitcol");
+        return resultFrame;
+    }
 }
