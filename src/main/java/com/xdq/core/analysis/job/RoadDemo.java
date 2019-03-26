@@ -8,18 +8,22 @@ package com.xdq.core.analysis.job;
 
 import com.xdq.core.common.SparkJob;
 import com.xdq.core.model.JdbcConfig;
+import com.xdq.core.model.Road;
 import com.xdq.core.utils.SplitUtils;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.*;
-import org.apache.spark.sql.DataFrame;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.*;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import scala.Tuple2;
+import scala.reflect.ClassTag;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -105,10 +109,24 @@ public class RoadDemo extends SparkJob {
                 return Arrays.asList(values);
             }
         });
-        for(String s:rdd7.collect()){
-            System.out.println(s);
-        }
 
+        JavaRDD<Road> rdd8 = rdd7.map(new Function<String, Road>() {
+            @Override
+            public Road call(String s) throws Exception {
+                String ss[] = s.split(",");
+                Road road = new Road();
+                road.setMsisdn(ss[0]);
+                road.setBegin_cgi(ss[1]);
+                road.setBegin_time(ss[2]);
+                road.setEnd_cgi(ss[3]);
+                road.setEnd_time(ss[4]);
+                return road;
+            }
+        });
+
+        DataFrame dataFrame1 = sqlContext.createDataFrame(rdd8,Road.class);
+
+        dataFrame1.show(10);
 
 
     }
