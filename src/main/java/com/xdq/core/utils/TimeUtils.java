@@ -46,4 +46,20 @@ public class TimeUtils {
         return new Long(-1);
     }
 
+    //时间大小比较 time1比time2小，返回true
+    public static Boolean timeCompare(String time1,String time2){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date d1 = sdf.parse(time1);
+            Date d2 = sdf.parse(time2);
+            if(d1.getTime()<d2.getTime()){
+                return true;
+            }
+            return false;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

@@ -3,6 +3,7 @@ package com.xdq.core.analysis.job;
 import com.xdq.core.common.SparkJob;
 import com.xdq.core.model.JdbcConfig;
 import com.xdq.core.model.Road;
+import com.xdq.core.utils.SortUtils;
 import com.xdq.core.utils.SplitUtils;
 import com.xdq.core.utils.TimeUtils;
 import org.apache.spark.api.java.JavaPairRDD;
@@ -49,7 +50,7 @@ public class UserTrajectory extends SparkJob {
         SQLContext sqlContext = new SQLContext(javaSparkContext);
         sqlContext.setConf("spark.sql.parquet.binaryAsString", "true");
 
-        DataFrame dataFrame = SplitUtils.SplitFiveMinSnapTest(inputpath,sqlContext).orderBy("msisdn","time").filter("cgi != '10038-108199'");
+        DataFrame dataFrame = SplitUtils.SplitFiveMinSnapTest(inputpath,sqlContext).filter("cgi != '10038-108199'");
 
         JavaRDD<Row> rdd1 = dataFrame.javaRDD();
 
@@ -63,7 +64,10 @@ public class UserTrajectory extends SparkJob {
         JavaPairRDD<String,String> rdd3 = rdd2.reduceByKey(new Function2<String, String, String>() {
             @Override
             public String call(String s, String s2) throws Exception {
-                return s;
+                if(TimeUtils.timeCompare(s,s2)){
+                    return s;
+                }
+                return s2;
             }
         });
 
@@ -103,7 +107,7 @@ public class UserTrajectory extends SparkJob {
                     values[i] = t._1+","+beginValues[0]+","+endValues[0]+","+ TimeUtils.phaseMinute(endValues[1],beginValues[1]);
                 }
 
-                return Arrays.asList(values);
+                return Arrays.asList(SortUtils.sortByTime(t._1,t._2));
             }
         });
 
