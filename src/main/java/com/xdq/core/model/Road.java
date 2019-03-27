@@ -22,8 +22,7 @@ public class Road implements Serializable{
     private String msisdn;
     private String begin_cgi;
     private String begin_time;
-    private String end_cgi;
-    private String end_time;
+    private Integer time;
 
     public String getMsisdn() {
         return msisdn;
@@ -49,19 +48,11 @@ public class Road implements Serializable{
         this.begin_time = begin_time;
     }
 
-    public String getEnd_cgi() {
-        return end_cgi;
+    public Integer getTime() {
+        return time;
     }
 
-    public void setEnd_cgi(String end_cgi) {
-        this.end_cgi = end_cgi;
-    }
-
-    public String getEnd_time() {
-        return end_time;
-    }
-
-    public void setEnd_time(String end_time) {
-        this.end_time = end_time;
+    public void setTime(Integer time) {
+        this.time = time;
     }
 }

@@ -1,7 +1,6 @@
-import com.xdq.core.analysis.job.RoadRealUserPathDetail;
+import com.xdq.core.analysis.job.UserTrajectory;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,31 +9,28 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * <b><code>RoadRealUserPathDetailTest</code></b>
+ * <b><code>UserTrajectoryTest</code></b>
  * <p/>
  * Description
  * <p/>
- * <b>Creation Time:</b> 2019/3/22 18:04.
+ * <b>Creation Time:</b> 2019/3/27 11:00.
  *
  * @author xiedeqi
  * @since xdq-core-mintaka 0.1.0
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext.xml"})
-public class RoadRealUserPathDetailTest {
+public class UserTrajectoryTest {
 
     @Autowired
-    private RoadRealUserPathDetail roadRealUserPathDetail;
+    private UserTrajectory userTrajectory;
 
     private String path;
-    private String statisticTime;
 
     @Before
     public void before(){
         path = this.getClass().getClassLoader().getResource(".")
-                .getPath()+"data/fiveMinuteData/txt";
-
-        statisticTime = "201809050900";
+                .getPath()+"data/test.txt";
     }
 
     @Test
@@ -46,8 +42,6 @@ public class RoadRealUserPathDetailTest {
 
         JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConf);
 
-        roadRealUserPathDetail.execute(javaSparkContext, new String[]{path, statisticTime});
+        userTrajectory.execute(javaSparkContext, new String[]{path});
     }
-
-
 }

@@ -3,6 +3,7 @@ package com.xdq.core.utils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * <b><code>TimeUtils</code></b>
@@ -30,4 +31,19 @@ public class TimeUtils {
 
         return timeStamp;
     }
+
+    //获取两时间相减得到相差多少分钟
+    public static Long phaseMinute(String endTime,String beginTime){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            Date d1 = sdf.parse(endTime);
+            Date d2 = sdf.parse(beginTime);
+            return (d1.getTime() - d2.getTime())/60000;
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Long(-1);
+    }
+
 }

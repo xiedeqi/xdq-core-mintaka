@@ -1,37 +1,38 @@
-/*
- * 广州丰石科技有限公司拥有本软件版权2019并保留所有权利。
- * Copyright 2019, Guangzhou Rich Stone Data Technologies Company Limited,
- * All rights reserved.
- */
-
 package com.xdq.core.analysis.job;
 
 import com.xdq.core.common.SparkJob;
 import com.xdq.core.model.JdbcConfig;
 import com.xdq.core.model.Road;
 import com.xdq.core.utils.SplitUtils;
+import com.xdq.core.utils.TimeUtils;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.api.java.function.*;
-import org.apache.spark.sql.*;
+import org.apache.spark.api.java.function.FlatMapFunction;
+import org.apache.spark.api.java.function.Function;
+import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.PairFunction;
+import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import scala.Tuple2;
+
 import java.util.Arrays;
 
 /**
- * <b><code>RoadDemo</code></b>
+ * <b><code>UserTrajectory</code></b>
  * <p/>
- * Description
+ * 基于cgi统计用户的轨迹
  * <p/>
- * <b>Creation Time:</b> 2019/3/26 22:21.
+ * <b>Creation Time:</b> 2019/3/27 10:58.
  *
- * @author 谢德奇
- * @since xdq-core-mintaka ${PROJECT_VERSION}
+ * @author xiedeqi
+ * @since xdq-core-mintaka 0.1.0
  */
 @Repository
-public class RoadDemo extends SparkJob {
+public class UserTrajectory extends SparkJob {
 
     @Autowired
     private JdbcConfig jdbcConfig;
@@ -97,7 +98,9 @@ public class RoadDemo extends SparkJob {
                 String[] values = new String[ss.length-1];
 
                 for(int i=0;i<values.length;i++){
-                    values[i] = t._1+","+ss[i]+","+ss[i+1];
+                    String[] beginValues = ss[i].split(",");
+                    String[] endValues = ss[i+1].split(",");
+                    values[i] = t._1+","+beginValues[0]+","+endValues[0]+","+ TimeUtils.phaseMinute(endValues[1],beginValues[1]);
                 }
 
                 return Arrays.asList(values);
@@ -112,20 +115,17 @@ public class RoadDemo extends SparkJob {
                 road.setMsisdn(ss[0]);
                 road.setBegin_cgi(ss[1]);
                 road.setBegin_time(ss[2]);
-                road.setEnd_cgi(ss[3]);
-                road.setEnd_time(ss[4]);
+                road.setTime(Integer.valueOf(ss[3]));
                 return road;
             }
         });
 
-        DataFrame dataFrame1 = sqlContext.createDataFrame(rdd8,Road.class);
+        DataFrame result = sqlContext.createDataFrame(rdd8,Road.class);
 
-        dataFrame1.show(10);
+        result.show(10);
 
 
     }
-
-
 
 
 }
