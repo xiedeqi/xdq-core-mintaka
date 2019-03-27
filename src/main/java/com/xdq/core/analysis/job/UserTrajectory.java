@@ -114,7 +114,7 @@ public class UserTrajectory extends SparkJob {
                 Road road = new Road();
                 road.setMsisdn(ss[0]);
                 road.setBegin_cgi(ss[1]);
-                road.setBegin_time(ss[2]);
+                road.setEnd_cgi(ss[2]);
                 road.setTime(Integer.valueOf(ss[3]));
                 return road;
             }

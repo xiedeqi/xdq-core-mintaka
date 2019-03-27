@@ -21,7 +21,7 @@ import java.io.Serializable;
 public class Road implements Serializable{
     private String msisdn;
     private String begin_cgi;
-    private String begin_time;
+    private String end_cgi;
     private Integer time;
 
     public String getMsisdn() {
@@ -40,12 +40,12 @@ public class Road implements Serializable{
         this.begin_cgi = begin_cgi;
     }
 
-    public String getBegin_time() {
-        return begin_time;
+    public String getEnd_cgi() {
+        return end_cgi;
     }
 
-    public void setBegin_time(String begin_time) {
-        this.begin_time = begin_time;
+    public void setEnd_cgi(String end_cgi) {
+        this.end_cgi = end_cgi;
     }
 
     public Integer getTime() {
