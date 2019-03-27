@@ -93,38 +93,15 @@ public class UserTrajectory extends SparkJob {
             }
         });
 
-        JavaRDD<String> rdd7 = rdd6.flatMap(new FlatMapFunction<Tuple2<String, String>, String>() {
+        JavaRDD<Road> rdd7 = rdd6.flatMap(new FlatMapFunction<Tuple2<String, String>, Road>() {
             @Override
-            public Iterable<String> call(Tuple2<String, String> t) throws Exception {
-
-                String ss[] = t._2.split("\\|");
-
-                String[] values = new String[ss.length-1];
-
-                for(int i=0;i<values.length;i++){
-                    String[] beginValues = ss[i].split(",");
-                    String[] endValues = ss[i+1].split(",");
-                    values[i] = t._1+","+beginValues[0]+","+endValues[0]+","+ TimeUtils.phaseMinute(endValues[1],beginValues[1]);
-                }
-
+            public Iterable<Road> call(Tuple2<String, String> t) throws Exception {
                 return Arrays.asList(SortUtils.sortByTime(t._1,t._2));
             }
         });
 
-        JavaRDD<Road> rdd8 = rdd7.map(new Function<String, Road>() {
-            @Override
-            public Road call(String s) throws Exception {
-                String ss[] = s.split(",");
-                Road road = new Road();
-                road.setMsisdn(ss[0]);
-                road.setBegin_cgi(ss[1]);
-                road.setEnd_cgi(ss[2]);
-                road.setTime(Integer.valueOf(ss[3]));
-                return road;
-            }
-        });
 
-        DataFrame result = sqlContext.createDataFrame(rdd8,Road.class);
+        DataFrame result = sqlContext.createDataFrame(rdd7,Road.class);
 
         result.show(10);
 
