@@ -7,10 +7,15 @@
 package com.xdq.core.analysis.job;
 
 import com.xdq.core.common.SparkJob;
+import com.xdq.core.model.JdbcConfig;
 import com.xdq.core.model.Person;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.api.java.function.Function;
+import org.apache.spark.sql.DataFrame;
+import org.apache.spark.sql.SQLContext;
+import org.apache.spark.sql.SaveMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -25,6 +30,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Demo extends SparkJob {
+
+    @Autowired
+    private JdbcConfig jdbcConfig;
 
     @Override
     public void execute(JavaSparkContext javaSparkContext, String[] args) {
@@ -53,6 +61,16 @@ public class Demo extends SparkJob {
         for(Person p:transToPerson.collect()){
             System.out.println(p.toString());
         }
+
+        //转成DataFrame对象
+        SQLContext sqlContext = new SQLContext(jsc);
+        DataFrame dataFrame = sqlContext.createDataFrame(transToPerson,Person.class);
+        dataFrame.show();
+
+        //入库pg
+        String tableName = "t_person"; //表名
+        dataFrame.write().mode(SaveMode.Append).jdbc(jdbcConfig.getUrl(),tableName,jdbcConfig.getConnectionProperties());
+
 
     }
 
