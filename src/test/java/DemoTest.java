@@ -1,4 +1,10 @@
-import com.xdq.core.analysis.job.UserTrajectory;
+/*
+ * 广州丰石科技有限公司拥有本软件版权2019并保留所有权利。
+ * Copyright 2019, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
+import com.xdq.core.analysis.job.Demo;
 import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.junit.Before;
@@ -9,28 +15,27 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 /**
- * <b><code>UserTrajectoryTest</code></b>
+ * <b><code>DemoTest</code></b>
  * <p/>
  * Description
  * <p/>
- * <b>Creation Time:</b> 2019/3/27 11:00.
+ * <b>Creation Time:</b> 2019/5/27 17:15.
  *
  * @author xiedeqi
- * @since xdq-core-mintaka 0.1.0
+ * @since xdq-core-mintaka ${PROJECT_VERSION}
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration({"classpath:applicationContext.xml"})
-public class UserTrajectoryTest {
-
+public class DemoTest {
     @Autowired
-    private UserTrajectory userTrajectory;
+    private Demo demo;
 
     private String path;
 
     @Before
     public void before(){
         path = this.getClass().getClassLoader().getResource(".")
-                .getPath()+"data/test.txt.txt";
+                .getPath()+"data/test/test.txt";
     }
 
     @Test
@@ -42,6 +47,7 @@ public class UserTrajectoryTest {
 
         JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConf);
 
-        userTrajectory.execute(javaSparkContext, new String[]{path});
+        demo.execute(javaSparkContext, new String[]{path});
     }
+
 }

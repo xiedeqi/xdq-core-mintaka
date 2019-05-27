@@ -1,3 +1,9 @@
+/*
+ * 广州丰石科技有限公司拥有本软件版权2019并保留所有权利。
+ * Copyright 2019, Guangzhou Rich Stone Data Technologies Company Limited,
+ * All rights reserved.
+ */
+
 package com.xdq.core.analysis.job;
 
 import com.xdq.core.common.SparkJob;
@@ -17,7 +23,7 @@ import org.apache.spark.sql.DataFrame;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SQLContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 import scala.Tuple2;
 
 import java.util.Arrays;
@@ -32,7 +38,7 @@ import java.util.Arrays;
  * @author xiedeqi
  * @since xdq-core-mintaka 0.1.0
  */
-@Repository
+@Component
 public class UserTrajectory extends SparkJob {
 
     @Autowired
